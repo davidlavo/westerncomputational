@@ -155,7 +155,10 @@ header {
     min-height: auto;
     @include background-cover;
     background-position: center;
-    background-image: url('../img/header.jpg');
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0.7)
+    ), url('../img/workshop/05.jpg');
     text-align: center;
     color: white;
     .header-content {
@@ -169,6 +172,11 @@ header {
                 text-transform: uppercase;
                 margin-top: 0;
                 margin-bottom: 0;
+            }
+            h2 {
+                font-weight: 250;
+                font-style: italic;
+                font-size: 24px;
             }
             hr {
                 margin: 30px auto;
@@ -220,6 +228,10 @@ header {
     p {
         margin-bottom: 0;
     }
+}
+
+#portfolio {
+  background-color: $theme-dark;
 }
 
 .portfolio-box {
@@ -348,4 +360,3 @@ img::-moz-selection {
 body {
     -webkit-tap-highlight-color: $theme-dark;
 }
-
