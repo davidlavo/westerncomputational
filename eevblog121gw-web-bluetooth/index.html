@@ -1,0 +1,154 @@
+<!doctype html>
+<!--
+Based on a sample from the Google Chrome Web Bluetooth site:
+https://googlechrome.github.io/samples/web-bluetooth/
+
+The markup and code contained in this page and project are
+product of an independent developer (david@westerncomputational.com),
+who is not associated with EEVBlog (or Google) in any way.  It was
+written for personal use, and has been submitted to the public for
+whatever use can be make of it.
+
+The original copyright notice follows:
+
+Copyright 2016 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Simple webpage demonstrating Bluetooth-LE connection to EEVBlog 121GW multimeter">
+  <meta name="author" content="David Lavo">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>EEVBlog-121GW Web Bluetooth App</title>
+  <script>
+  // Add a global error event listener early on in the page load, to help ensure that browsers
+  // which don't support specific functionality still end up displaying a meaningful message.
+  window.addEventListener('error', function(error) {
+    if (ChromeSamples && ChromeSamples.setStatus) {
+      ChromeSamples.setStatus(error.message + ' (Your browser may not support this feature.)');
+      error.preventDefault();
+    }
+  });
+  </script>
+
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="css/main.css"
+
+</head>
+
+<body>
+  <img class="pageIcon" src="icon.png">
+  <h1>EEVBlog-121GW Web Bluetooth App</h1>
+  <p class="availability">
+    Available in <a target="_blank" href="https://www.chromestatus.com/feature/5264933985976320">Chrome 48+</a></p>
+    <p>The <a href="https://github.com/WebBluetoothCG/web-bluetooth">Web Bluetooth API</a>
+      lets websites discover and communicate with devices over the
+      Bluetooth 4 wireless standard using the Generic Attribute Profile (GATT). It is
+      currently partially implemented in Chrome OS, Android M, Linux and Mac
+      behind the experimental flag <code>chrome://flags/#enable-web-bluetooth</code>.<br/>
+
+      <div id="connect_buttons_container">
+        <button id="connectMeter">Connect to Meter</button>
+        <button id="startNotifications" disabled>Start Notifications</button>
+        <button id="stopNotifications" disabled>Stop Notifications</button>
+        <button id="reset">Reset Bluetooth Device</button>
+      </div>
+
+      <div id="measurement_container">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr><td><p id="connection_state">Not Connected</p></td></tr>
+          <tr><td><p id="measurement_mode" data-element-type="display_state">Voltage-DC</p></td></tr>
+          <tr><td><p id="measurement_value" data-element-type="display_value">0</p></td></tr>
+          <tr><td><p id="measurement_units" data-element-type="display_value">V</p></td></tr>
+        </table>
+      </div>
+
+      <div id="debug_output">
+        <h3>Debug Output</h3>
+        <div id="output" class="output">
+          <div id="content"></div>
+          <div id="status"></div>
+          <pre id="log"></pre>
+        </div>
+      </div>
+
+      <script src="js/chromesamples.js"></script>
+      <script src="js/eevblog121gw-parser.js"></script>
+      <script src="js/eevblog121gw.js"></script>
+      <script src="js/eev-test.js"></script>
+
+      <script>
+      document.querySelector('#connectMeter').addEventListener('click', function() {
+        if (isWebBluetoothEnabled()) {
+          EEVTest.connectMeterButtonClick();
+        }
+      });
+
+      document.querySelector('#startNotifications').addEventListener('click', function(event) {
+        if (isWebBluetoothEnabled()) {
+          EEVTest.onStartNotificationsButtonClick();
+        }
+      });
+
+      document.querySelector('#stopNotifications').addEventListener('click', function(event) {
+        if (isWebBluetoothEnabled()) {
+          EEVTest.onStopNotificationsButtonClick();
+        }
+      });
+
+      document.querySelector('#reset').addEventListener('click', function(event) {
+        if (isWebBluetoothEnabled()) {
+          ChromeSamples.clearLog();
+          EEVTest.onResetButtonClick();
+        }
+      });
+      </script>
+
+      <script>
+      log = ChromeSamples.log;
+
+      function isWebBluetoothEnabled() {
+        if (navigator.bluetooth) {
+          return true;
+        } else {
+          ChromeSamples.setStatus('Web Bluetooth API is not available.\n' +
+          'Please make sure the Web Bluetooth flag is enabled.');
+          return false;
+        }
+      }
+      </script>
+
+      <script>
+      window.onload = function (e) {
+        // Log a warning if the sample is not supposed to execute on this
+        // version of Chrome.
+        if (/Chrome\/(\d+\.\d+.\d+.\d+)/.test(navigator.userAgent)){
+          if (48 > parseInt(RegExp.$1)) {
+            ChromeSamples.setStatus('Warning! Keep in mind this sample has been tested with Chrome ' + 48 + '.');
+          }
+        }
+        ///IDVMPanel.initialize();
+        //Powerleap.initialize();
+        ///graph_initialize();
+        ///addValueToGraph("cvs", 0.0);
+        ///document.getElementById('screen').style.display = 'none';
+        ///document.getElementById('idvm_control_panel').style.display = 'none';
+        document.getElementById('debug_output').style.visibility = ChromeSamples.loggingOn ? 'visible' : 'hidden';
+      }
+      </script>
+
+    </body>
+    </html>
